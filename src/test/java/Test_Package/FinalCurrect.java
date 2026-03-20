@@ -42,8 +42,8 @@ public class FinalCurrect {
 //                }
 //            }
 
-            File modelfile = new File("F:\\desktop backup 5 july 25\\GCC TBC MAY 2025 AUTO\\allocation\\English_30_40_Quetion_paper\\All_Subjective_Eng30\\Eng30 Speed 11.docx");
-            File studentfile = new File("F:\\desktop backup 5 july 25\\GCC TBC MAY 2025 AUTO\\marking\\New folder\\SpeedAnswer_1101150327_301_6-20-2025_9-13-00.docx");
+            File modelfile = new File("F:\\Desktop backup 10-10-2025\\New folder\\New folder\\Eng 40 Speed 4.docx");
+            File studentfile = new File("F:\\Desktop backup 10-10-2025\\New folder\\New folder\\SpeedAnswer_8301160268_104_10-10-2025_16-21-49.docx");
 
             // full continuous text
             String modelText = extractFullText(modelfile);
@@ -146,7 +146,7 @@ public class FinalCurrect {
             summaryRun.addCarriageReturn();
 
             // save output file
-            FileOutputStream fos = new FileOutputStream("F:\\desktop backup 5 july 25\\GCC TBC MAY 2025 AUTO\\marking\\Result_Highlighted.docx");
+            FileOutputStream fos = new FileOutputStream("F:\\Desktop backup 10-10-2025\\New folder\\New folder\\Result_Highlighted.docx");
             outDoc.write(fos);
             fos.close();
             outDoc.close();

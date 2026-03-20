@@ -1,6 +1,7 @@
 package Test_Package;
 import org.apache.poi.xwpf.usermodel.*;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
+import org.testng.annotations.Test;
 
 import java.io.FileInputStream;
 import java.io.File;

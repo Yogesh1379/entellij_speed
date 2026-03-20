@@ -52,8 +52,8 @@ static int FormatingMistake=0;
 //                }
 //            }
 
-            File modelfile = new File("C:\\Users\\User\\Desktop\\New folder\\Mar30 Speed 1.docx");
-            File studentfile = new File("C:\\Users\\User\\Desktop\\New folder\\SpeedAnswer_1101250042_1101_6-30-2025_9-15-38.docx");
+            File modelfile = new File("F:\\Desktop backup 10-10-2025\\New folder\\New folder\\Eng 40 Speed 4.docx");
+            File studentfile = new File("F:\\Desktop backup 10-10-2025\\New folder\\New folder\\SpeedAnswer_8301160268_104_10-10-2025_16-21-49.docx");
 
             // full continuous text
             String modelText = extractFullText(modelfile);
@@ -149,7 +149,7 @@ static int FormatingMistake=0;
             summaryRun.setText("Extra Words  (Blue)   : " + extraWordCount);
             summaryRun.addCarriageReturn();
 
-            summaryRun.setText("Continue 3 or more Enter   : " + maxBlankSequence);
+            summaryRun.setText("Continue 2 or more Enter   : " + maxBlankSequence);
             summaryRun.addCarriageReturn();
             summaryRun.setText("Continue 3 or more Tab : " + tabCount);
             summaryRun.addCarriageReturn();
@@ -164,7 +164,7 @@ static int FormatingMistake=0;
             summaryRun.addCarriageReturn();
 
             // save output file
-            FileOutputStream fos = new FileOutputStream("C:\\Users\\User\\Desktop\\New folder\\Result_Highlighted.docx");
+            FileOutputStream fos = new FileOutputStream("F:\\Desktop backup 10-10-2025\\New folder\\New folder\\Result_Highlighted.docx");
             outDoc.write(fos);
             fos.close();
             outDoc.close();
@@ -190,7 +190,7 @@ static int FormatingMistake=0;
             for (XWPFParagraph p : doc.getParagraphs()) {
                 if (p.getText().trim().isEmpty()) {
                     continuousBlankParas++;
-                    if (continuousBlankParas >= 2) {
+                    if (continuousBlankParas >= 1) {
                         maxBlankSequence++;
                     }
                 } else {
@@ -198,11 +198,11 @@ static int FormatingMistake=0;
                 }
             }
 
-            System.out.println("Continuous blank paragraphs (3+): " + maxBlankSequence);
+            System.out.println("Continuous blank paragraphs (2+): " + maxBlankSequence);
 // --- Count before normalization ---
-             tabCount = countMatches(rawText, "\t{3,}");           // 3 or more tabs
+             tabCount = countMatches(rawText, "\t{2,}");           // 3 or more tabs
 
-             spaceCount = countMatches(rawText, " {3,}");          // 3 or more spaces
+             spaceCount = countMatches(rawText, " {2,}");          // 3 or more spaces
 
             System.out.println("Continuous Tabs (3+): " + tabCount);
 
