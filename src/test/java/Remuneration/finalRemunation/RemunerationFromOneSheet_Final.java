@@ -17,7 +17,7 @@ public class RemunerationFromOneSheet_Final {
     static List<String> mismatchList = new ArrayList<>();
     public static void main(String[] args) throws Exception {
         FileInputStream fis = new FileInputStream(
-                new File("F:\\GCC  TBC December 2025\\Remuneration\\final\\Remunation2026_12022026_12_12 PM.xlsx")
+                new File("F:\\GCCTBC-APR 2026\\Remunation\\Final\\All Region REMUNERATION_1.xlsx")
         );
         XSSFWorkbook workbook = new XSSFWorkbook(fis);
         Sheet sheet = workbook.getSheet("Sheet1");
@@ -59,10 +59,10 @@ public class RemunerationFromOneSheet_Final {
         int marPcCol = 7;
         int marStdCol=8;
         int engMarDaysCol = 10;
-        int totalDaysCol = 18;
-        int designationCol=22;
-        int totalAmtCol=25;
-        int mockday=17;
+        int totalDaysCol = 12;
+        int designationCol=16;
+        int totalAmtCol=19;
+        int mockday=11;
         // Condition 1: All rows must have same centre name
         String firstName = getValue(rows.get(0).getCell(centreNameCol));
 
@@ -291,7 +291,7 @@ int centerHead=0;
             row.createCell(0).setCellValue(parts[0].trim());
             row.createCell(1).setCellValue(parts.length > 1 ? parts[1].trim() : "");
         }
-        FileOutputStream fos = new FileOutputStream("F:\\GCC  TBC December 2025\\Remuneration\\final\\Mismatch_Report12-02-2026 final.xlsx");
+        FileOutputStream fos = new FileOutputStream("F:\\GCCTBC-APR 2026\\Remunation\\Final\\Mismatch_Report remuneration02-05-2026.xlsx");
         wb.write(fos);
         fos.close();
         wb.close();

@@ -15,7 +15,7 @@ public class Marathi_EnterAndTabCount3_lcs_diff {
     public static void main(String[] args) throws IOException {
 
         // Folder containing student files
-        File studentFolder = new File("F:\\GCC  TBC December 2025\\Remarking files\\English\\English");
+        File studentFolder = new File("F:\\GCCTBC-APR 2026\\English Speed answer file and marking\\All speed files\\3040 speed files");
         File[] docxFiles = studentFolder.listFiles((dir, name) -> name.toLowerCase().endsWith(".docx"));
 
         if (docxFiles == null || docxFiles.length == 0) {
@@ -24,7 +24,7 @@ public class Marathi_EnterAndTabCount3_lcs_diff {
         }
 
         // Output folder for highlighted DOCX
-        File outputFolder = new File(studentFolder.getParentFile(), "Results_Highlighted1726");
+        File outputFolder = new File(studentFolder.getParentFile(), "Results_Highlighted_Speed");
         if (!outputFolder.exists()) outputFolder.mkdirs();
 
         // Create Excel summary workbook
@@ -49,7 +49,7 @@ public class Marathi_EnterAndTabCount3_lcs_diff {
 
         // Load allocation Excel only once
         FileInputStream fisAlloc = new FileInputStream(
-                "F:\\GCC  TBC December 2025\\Question\\allocation\\Batch Wise Subjective.xlsx");
+                "F:\\GCCTBC-APR 2026\\qestion allocation\\IMPORTING ENG FINAL DATA\\Batch Wise Subjective (1).xlsx");
         Workbook allocWorkbook = new XSSFWorkbook(fisAlloc);
         Sheet allocSheet = allocWorkbook.getSheetAt(0);
 
@@ -85,7 +85,7 @@ public class Marathi_EnterAndTabCount3_lcs_diff {
                     if ((fileCandidate.startsWith("Eng30 Speed") && course1 == 1) ||
                             (fileCandidate.startsWith("Eng 40 Speed") && course1 == 2)) {
                         modelFile = new File(
-                                "F:\\GCC  TBC December 2025\\Question\\ENGLISH\\All 30&40\\" + fileCandidate);
+                                "F:\\GCCTBC-APR 2026\\qestion allocation\\FINAL Repeater Question files April 2026\\ENGLISH Final\\SPeed\\" + fileCandidate);
                         break;
                     }
                 }
@@ -197,7 +197,7 @@ public class Marathi_EnterAndTabCount3_lcs_diff {
 
         // Save Excel summary
         FileOutputStream fosExcel = new FileOutputStream(
-                new File(studentFolder.getParentFile(), "EngStudentMistakesSummary1726.xlsx"));
+                new File(studentFolder.getParentFile(), "Eng Speed Mistakes Summary.xlsx"));
         summaryWorkbook.write(fosExcel);
         fosExcel.close();
         summaryWorkbook.close();
@@ -407,7 +407,7 @@ public class Marathi_EnterAndTabCount3_lcs_diff {
 
         fis.close();
 
-        //  Now ignore trailing tabs/spaces if they exist at document end
+        //   ignore trailing tabs/spaces if they exist at document end
         String finalText = sb.toString();
         finalText = finalText.replaceAll("[\\t\\n\\r ]+$", ""); // remove trailing tabs/spaces/enters
 

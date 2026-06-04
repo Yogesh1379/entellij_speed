@@ -12,9 +12,9 @@ public class ReadSpeedFirstThreeWordsFromDocToExcel {
 
     public static void main(String[] args) {
         // Input folder containing Word files
-        File folder = new File("F:\\GCC  TBC December 2025\\Mararthi bucket\\std ans file\\speed");
+        File folder = new File("F:\\GCCTBC-APR 2026\\Mar_3040_AnswerFiles_Apr_2026");
         // Output Excel file
-        String outputExcel = "F:\\GCC  TBC December 2025\\Mararthi bucket\\First 3 word wrong compare\\Speed First 3 WordsOutput.xlsx";
+        String outputExcel = "F:\\GCCTBC-APR 2026\\Wrong compare check\\marathi\\Speed First 3 WordsOutput.xlsx";
 
         try (Workbook workbook = new XSSFWorkbook()) {
             Sheet sheet = workbook.createSheet("First3Words");
@@ -39,7 +39,7 @@ public class ReadSpeedFirstThreeWordsFromDocToExcel {
                 workbook.write(fos);
             }
 
-            System.out.println("✅ Excel created successfully at: " + outputExcel);
+            System.out.println(" Excel created successfully at: " + outputExcel);
 
         } catch (Exception e) {
             e.printStackTrace();

@@ -11,8 +11,8 @@ public class RemoveDuplicateSeatPDF {
 
     public static void main(String[] args) throws IOException {
 
-        String sourceDir = "F:\\GCC  TBC December 2025\\Marathi photocopy\\Photocopy";
-        String targetDir = "F:\\GCC  TBC December 2025\\Marathi photocopy\\PDF_UNIQUE";
+        String sourceDir = "F:\\GCCTBC-APR 2026\\Photocopy folder\\marathi\\New folder (2)";
+        String targetDir = "F:\\GCCTBC-APR 2026\\Photocopy folder\\marathi\\PDF_UNIQUE";
 
         File sourceFolder = new File(sourceDir);
         File targetFolder = new File(targetDir);

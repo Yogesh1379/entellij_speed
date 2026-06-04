@@ -29,7 +29,7 @@ public class Marathi_EnterAndTabCount3_lcs_diff {
     public static void main(String[] args) throws IOException {
 
         // Folder containing student files
-        File studentFolder = new File("F:\\GCC  TBC December 2025\\Remarking files\\Marathi\\Marathi");
+        File studentFolder = new File("F:\\GCCTBC-APR 2026\\Marathi Speed answer files\\speed");
         File[] docxFiles = studentFolder.listFiles((dir, name) -> name.toLowerCase().endsWith(".docx"));
 
         if (docxFiles == null || docxFiles.length == 0) {
@@ -63,7 +63,7 @@ public class Marathi_EnterAndTabCount3_lcs_diff {
 
         // Load allocation Excel only once
         FileInputStream fisAlloc = new FileInputStream(
-                "F:\\GCC  TBC December 2025\\Question\\allocation\\marathi\\SUbjectiveMarathiHin.xlsx");
+                "F:\\GCCTBC-APR 2026\\qestion allocation\\Batch Wise Subjective (2).xlsx");
         Workbook allocWorkbook = new XSSFWorkbook(fisAlloc);
         Sheet allocSheet = allocWorkbook.getSheetAt(0);
 
@@ -102,11 +102,11 @@ public class Marathi_EnterAndTabCount3_lcs_diff {
                 if (excelBatch.equals(batchname) && excelCourse1 == course1) {
                     String fileCandidate = getCellValueAsString(subjectiveCell);
                     if ((fileCandidate.startsWith("Mar30 Speed") && course1 == 3) ||
-                            (fileCandidate.startsWith("Mar 40 Speed") && course1 == 4)||
-                            (fileCandidate.startsWith("Hin30 Speed") && course1 == 5)||
+                            (fileCandidate.startsWith("Mar 40 Speed") && course1 == 4) ||
+                            (fileCandidate.startsWith("Hin30 Speed") && course1 == 5) ||
                             (fileCandidate.startsWith("Hin 40 Speed") && course1 == 6)) {
                         modelFile = new File(
-                                "F:\\GCC  TBC December 2025\\Question\\allocation\\marathi\\All\\" + fileCandidate);
+                                "F:\\GCCTBC-APR 2026\\qestion allocation\\FINAL Repeater Question files April 2026\\Mar hindi speed\\" + fileCandidate);
                         break;
                     }
                 }
@@ -116,109 +116,115 @@ public class Marathi_EnterAndTabCount3_lcs_diff {
                 System.out.println("No model file for: " + stdfile);
                 continue;
             }
+            try {
+                // Extract text from model and student files
+                String modelText = extractFullText(modelFile);
+                String studentText = extractFullText(studentFile);
 
-            // Extract text from model and student files
-            String modelText = extractFullText(modelFile);
-            String studentText = extractFullText(studentFile);
+                // Compare word by word using LCS-based alignment and generate highlighted DOCX
+                XWPFDocument outDoc = new XWPFDocument();
+                XWPFParagraph para = outDoc.createParagraph();
 
-            // Compare word by word using LCS-based alignment and generate highlighted DOCX
-            XWPFDocument outDoc = new XWPFDocument();
-            XWPFParagraph para = outDoc.createParagraph();
+                String[] mWords = modelText.split("\\s+");
+                String[] sWords = studentText.split("\\s+");
 
-            String[] mWords = modelText.split("\\s+");
-            String[] sWords = studentText.split("\\s+");
+                // Use LCS to align sequences so continuous missing/extra segments are handled correctly
+                AlignmentResult align = computeAlignment(mWords, sWords);
 
-            // Use LCS to align sequences so continuous missing/extra segments are handled correctly
-            AlignmentResult align = computeAlignment(mWords, sWords);
+                int missingWordCount = 0, extraWordCount = 0, wrongWordCount = 0;
+                StringBuilder allMistakes = new StringBuilder();
 
-            int missingWordCount = 0, extraWordCount = 0, wrongWordCount = 0;
-            StringBuilder allMistakes = new StringBuilder();
-
-            // Walk alignment and create colored runs
-            for (AlignedToken token : align.alignedTokens) {
-                XWPFRun r = para.createRun();
-                if (token.type == TokenType.MATCH) {
-                    r.setText(token.student != null ? token.student + " " : token.model + " ");
-                } else if (token.type == TokenType.MISSING) {
-                    // model word(s) missing in student
-                    for (String mw : token.modelSequence) {
+                // Walk alignment and create colored runs
+                for (AlignedToken token : align.alignedTokens) {
+                    XWPFRun r = para.createRun();
+                    if (token.type == TokenType.MATCH) {
+                        r.setText(token.student != null ? token.student + " " : token.model + " ");
+                    } else if (token.type == TokenType.MISSING) {
+                        // model word(s) missing in student
+                        for (String mw : token.modelSequence) {
+                            XWPFRun rr = para.createRun();
+                            rr.setText("[" + mw + " ] ");
+                            rr.setColor("008000");
+                        }
+                        missingWordCount += token.modelSequence.size();
+                        allMistakes.append("[ Missing: ").append(String.join(" ", token.modelSequence)).append(" ]; ");
+                    } else if (token.type == TokenType.EXTRA) {
+                        // student has extra word(s)
+                        for (String sw : token.studentSequence) {
+                            XWPFRun rr = para.createRun();
+                            rr.setText("[ " + sw + "] ");
+                            rr.setColor("0000FF");
+                        }
+                        extraWordCount += token.studentSequence.size();
+                        allMistakes.append("[ Extra: ").append(String.join(" ", token.studentSequence)).append(" ]; ");
+                    } else if (token.type == TokenType.SUBSTITUTION) {
+                        // substitution / wrong word(s)
                         XWPFRun rr = para.createRun();
-                        rr.setText("[" + mw + " ] ");
-                        rr.setColor("008000");
+                        rr.setText("[ " + token.model + " / " + token.student + "] ");
+                        rr.setColor("FF0000");
+                        wrongWordCount++;
+                        allMistakes.append("[ Wrong: ").append(token.student).append(" | ").append(token.model).append(" ]; ");
                     }
-                    missingWordCount += token.modelSequence.size();
-                    allMistakes.append("[ Missing: ").append(String.join(" ", token.modelSequence)).append(" ]; ");
-                } else if (token.type == TokenType.EXTRA) {
-                    // student has extra word(s)
-                    for (String sw : token.studentSequence) {
-                        XWPFRun rr = para.createRun();
-                        rr.setText("[ " + sw + "] ");
-                        rr.setColor("0000FF");
-                    }
-                    extraWordCount += token.studentSequence.size();
-                    allMistakes.append("[ Extra: ").append(String.join(" ", token.studentSequence)).append(" ]; ");
-                } else if (token.type == TokenType.SUBSTITUTION) {
-                    // substitution / wrong word(s)
-                    XWPFRun rr = para.createRun();
-                    rr.setText("[ " + token.model + " / " + token.student + "] ");
-                    rr.setColor("FF0000");
-                    wrongWordCount++;
-                    allMistakes.append("[ Wrong: ").append(token.student).append(" | ").append(token.model).append(" ]; ");
                 }
+
+                // Total formatting mistakes
+                FormatingMistake = maxBlankSequence + tabCount + spaceCount;
+                int totalMistakes = missingWordCount + extraWordCount + wrongWordCount + FormatingMistake;
+                int obtainedMarks = Math.max(40 - totalMistakes, 0);
+
+                // Add summary in DOCX
+                XWPFParagraph summaryPara = outDoc.createParagraph();
+                XWPFRun summaryRun = summaryPara.createRun();
+                summaryRun.setText("\n--- Mistake Summary ---\n");
+                summaryRun.addCarriageReturn();
+                summaryRun.setText("Missing Words (Green) : " + missingWordCount);
+                summaryRun.addCarriageReturn();
+                summaryRun.setText("Extra Words (Blue) : " + extraWordCount);
+                summaryRun.addCarriageReturn();
+                summaryRun.setText("Wrong Words (Red) : " + wrongWordCount);
+                summaryRun.addCarriageReturn();
+                summaryRun.setText("Extra Enter (2+): " + maxBlankSequence);
+                summaryRun.addCarriageReturn();
+                summaryRun.setText("Extra Tab (3+): " + tabCount);
+                summaryRun.addCarriageReturn();
+                summaryRun.setText("Extra Space (3+): " + spaceCount);
+                summaryRun.addCarriageReturn();
+                summaryRun.addCarriageReturn();
+                summaryRun.setBold(true);
+                summaryRun.setText("Total Marks: " + obtainedMarks);
+
+                // Save highlighted DOCX
+                FileOutputStream fos = new FileOutputStream(new File(outputFolder, "Result_" + stdfile));
+                outDoc.write(fos);
+                fos.close();
+                outDoc.close();
+
+                // Write Excel summary
+                Row row = summarySheet.createRow(rowNum++);
+                row.createCell(0).setCellValue(seatno); // seat number from filename
+                row.createCell(1).setCellValue(stdfile);
+                row.createCell(2).setCellValue(totalMistakes);
+                row.createCell(3).setCellValue(obtainedMarks);
+                row.createCell(4).setCellValue(extraWordCount);
+                row.createCell(5).setCellValue(missingWordCount);
+                row.createCell(6).setCellValue(wrongWordCount);
+                row.createCell(7).setCellValue(maxBlankSequence);
+                row.createCell(8).setCellValue(tabCount);
+                row.createCell(9).setCellValue(spaceCount);
+                row.createCell(10).setCellValue(allMistakes.toString());
+
+                System.out.println(stdfile);
+            } catch (Exception e) {
+                Row row = summarySheet.createRow(rowNum++);
+                row.createCell(0).setCellValue(seatno); // seat number from filename
+                row.createCell(1).setCellValue(stdfile);
+                row.createCell(2).setCellValue(e.getMessage());
             }
-
-            // Total formatting mistakes
-            FormatingMistake = maxBlankSequence + tabCount + spaceCount;
-            int totalMistakes = missingWordCount + extraWordCount + wrongWordCount + FormatingMistake;
-            int obtainedMarks = Math.max(40 - totalMistakes, 0);
-
-            // Add summary in DOCX
-            XWPFParagraph summaryPara = outDoc.createParagraph();
-            XWPFRun summaryRun = summaryPara.createRun();
-            summaryRun.setText("\n--- Mistake Summary ---\n");
-            summaryRun.addCarriageReturn();
-            summaryRun.setText("Missing Words (Green) : " + missingWordCount);
-            summaryRun.addCarriageReturn();
-            summaryRun.setText("Extra Words (Blue) : " + extraWordCount);
-            summaryRun.addCarriageReturn();
-            summaryRun.setText("Wrong Words (Red) : " + wrongWordCount);
-            summaryRun.addCarriageReturn();
-            summaryRun.setText("Extra Enter (2+): " + maxBlankSequence);
-            summaryRun.addCarriageReturn();
-            summaryRun.setText("Extra Tab (3+): " + tabCount);
-            summaryRun.addCarriageReturn();
-            summaryRun.setText("Extra Space (3+): " + spaceCount);
-            summaryRun.addCarriageReturn();
-            summaryRun.addCarriageReturn();
-            summaryRun.setBold(true);
-            summaryRun.setText("Total Marks: " + obtainedMarks);
-
-            // Save highlighted DOCX
-            FileOutputStream fos = new FileOutputStream(new File(outputFolder, "Result_" + stdfile));
-            outDoc.write(fos);
-            fos.close();
-            outDoc.close();
-
-            // Write Excel summary
-            Row row = summarySheet.createRow(rowNum++);
-            row.createCell(0).setCellValue(seatno); // seat number from filename
-            row.createCell(1).setCellValue(stdfile);
-            row.createCell(2).setCellValue(totalMistakes);
-            row.createCell(3).setCellValue(obtainedMarks);
-            row.createCell(4).setCellValue(extraWordCount);
-            row.createCell(5).setCellValue(missingWordCount);
-            row.createCell(6).setCellValue(wrongWordCount);
-            row.createCell(7).setCellValue(maxBlankSequence);
-            row.createCell(8).setCellValue(tabCount);
-            row.createCell(9).setCellValue(spaceCount);
-            row.createCell(10).setCellValue(allMistakes.toString());
-
-            System.out.println(stdfile);
         }
-
         // Save Excel summary
+
         FileOutputStream fosExcel = new FileOutputStream(
-                new File(studentFolder.getParentFile(), "EngStudentMistakesSummary.xlsx"));
+                new File(studentFolder.getParentFile(), "Mar Speed MistakesSummary.xlsx"));
         summaryWorkbook.write(fosExcel);
         fosExcel.close();
         summaryWorkbook.close();

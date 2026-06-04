@@ -13,7 +13,7 @@ import java.io.*;
 public class RemunerationExpense {
     public static void main(String[] args) throws IOException {
         FileInputStream fis = new FileInputStream(
-                "C:\\Users\\User\\Desktop\\remunatuin\\Book1.xlsx"
+                "F:\\GCCTBC-APR 2026\\Remunation\\Remunaration Data.xlsx"
         );
         XSSFWorkbook workbook = new XSSFWorkbook(fis);
         XSSFSheet sheet = workbook.getSheetAt(0);
@@ -35,15 +35,18 @@ public class RemunerationExpense {
         header.createCell(8).setCellValue("Peon Amount");
         header.createCell(9).setCellValue("Center Head ");
         header.createCell(10).setCellValue("Center Head Amount");
-        header.createCell(11).setCellValue("College Amount");
-        header.createCell(12).setCellValue("Other");
-        header.createCell(13).setCellValue("Exam Day");
+        header.createCell(11).setCellValue("Total Student");
+        header.createCell(12).setCellValue("College Amount");
+        header.createCell(13).setCellValue("Other");
+        header.createCell(14).setCellValue("Exam Day");
+        header.createCell(15).setCellValue("Total Amount");
 
 
         for(int i=1;i<=rc;i++){
             XSSFRow row = sheet.getRow(i);
             Row row1 = sheet1.createRow(i);
             String centreCode = df.formatCellValue(row.getCell(1));
+            System.out.println(centreCode);
             String centerName = df.formatCellValue(row.getCell(2));
             String engDay = df.formatCellValue(row.getCell(3));
             String engPC=df.formatCellValue(row.getCell(4));
@@ -74,31 +77,41 @@ public class RemunerationExpense {
             //IT teacher
             row1.createCell(3).setCellValue(requiredmanPower);
             //IT teacher Amount
-            row1.createCell(4).setCellValue(Integer.valueOf(totalDays)*requiredmanPower*700);
+            int IT_teacher_Amount = Integer.valueOf(totalDays) * requiredmanPower * 700;
+            row1.createCell(4).setCellValue(IT_teacher_Amount);
 //winner tech
+           int winner_tech_Amount=Integer.valueOf(totalDays)*requiredmanPower*450;
             row1.createCell(5).setCellValue(requiredmanPower);
-            row1.createCell(6).setCellValue(Integer.valueOf(totalDays)*requiredmanPower*450);
+            row1.createCell(6).setCellValue(winner_tech_Amount);
 
             // peon
+          int Peon_Amount= Integer.valueOf(examDay)*requiredmanPower*150;
             row1.createCell(7).setCellValue(requiredmanPower);
-            row1.createCell(8).setCellValue(Integer.valueOf(examDay)*requiredmanPower*150);
+            row1.createCell(8).setCellValue(Peon_Amount);
 
             // center head
+            int center_head_Amount= Integer.valueOf(examDay)*requiredmancenterHead*700;
             row1.createCell(9).setCellValue(requiredmancenterHead);
-            row1.createCell(10).setCellValue(Integer.valueOf(examDay)*requiredmancenterHead*700);
+            row1.createCell(10).setCellValue(center_head_Amount);
 
+            row1.createCell(11).setCellValue(TotatlSTD);
             //college
+            int college_Amount=TotatlSTD*50;
             if((EngSTD+MarSTD+Eng50STD+Eng60STD)==TotatlSTD){
-                row1.createCell(11).setCellValue(TotatlSTD*50);
+                row1.createCell(12).setCellValue(college_Amount);
             }
 
             //other
-            row1.createCell(12).setCellValue(requiredmanPower*500);
+           int Other_Amount=requiredmanPower*500;
+            row1.createCell(13).setCellValue(Other_Amount);
 
-            row1.createCell(13).setCellValue(totalDays);
+            row1.createCell(14).setCellValue(totalDays);
+
+            int Total_amount=IT_teacher_Amount+winner_tech_Amount+Peon_Amount+center_head_Amount+college_Amount+Other_Amount;
+            row1.createCell(15).setCellValue(Total_amount);
 
             FileOutputStream fileOut = new FileOutputStream(new File(
-                   "C:\\Users\\User\\Desktop\\remunatuin\\Remunation Expense report.xlsx"
+                   "F:\\GCCTBC-APR 2026\\Remunation\\Remuneration Estimation.xlsx"
             ));
             // Write the workbook data to the file
             workbook1.write(fileOut);

@@ -12,9 +12,9 @@ public class ReadLetterFirstThreeWordsFromDocToExcel {
 
     public static void main(String[] args) {
         // Input folder containing Word files
-        File folder = new File("F:\\GCC  TBC December 2025\\Eng Jan26 Answer files\\ENG_3040_AnswerFiles_JAN_2026");
+        File folder = new File("F:\\GCCTBC-APR 2026\\Mar_3040_AnswerFiles_Apr_2026");
         // Output Excel file
-        String outputExcel = "F:\\GCC  TBC December 2025\\Eng Jan26 Answer files\\LetterHeadingOutput.xlsx";
+        String outputExcel = "F:\\GCCTBC-APR 2026\\Wrong compare check\\marathi\\LetterHeadingOutput.xlsx";
 
         try (Workbook workbook = new XSSFWorkbook()) {
             Sheet sheet = workbook.createSheet("First3Words");
